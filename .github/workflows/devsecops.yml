@@ -9,23 +9,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: 📦 Checkout Code
       uses: actions/checkout@v3
 
-    - name: Setup Node.js
+    - name: 🔧 Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    - name: Install Dependencies
+    - name: 📥 Install Dependencies
       run: npm install
 
-    - name: Run App Test
-      run: echo "No tests yet!"  # Add real tests later
+    - name: 🔎 Run npm audit (fail on vulnerabilities)
+      run: |
+        echo "Running npm audit..."
+        npm audit --audit-level=low
 
-    - name: Dependency Vulnerability Check (OWASP)
+    - name: 🛡️ Dependency Vulnerability Check (OWASP)
       uses: dependency-check/Dependency-Check_Action@main
       with:
         project: 'NodeApp'
         path: '.'
         format: 'HTML'
+        out: reports
+
+    - name: 🗂️ Upload OWASP Dependency Check Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-check-report
+        path: reports/dependency-check-report.html
